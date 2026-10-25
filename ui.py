@@ -7,10 +7,10 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-# Logged-in user shown in the header (demo values).
-USER_NAME = "Avery Ruiz"
+# Logged-in user shown in the header.
+USER_NAME = "Hospital Admin"
 USER_ROLE = "Administrator"
-USER_INITIALS = "".join(w[0] for w in USER_NAME.split()[:2]).upper()
+USER_INITIALS = "HA"
 
 PRIORITY_STYLE = {"Normal": "blue", "High": "red", "Medium": "amber",
                   "Low": "grey", "Emergency": "red"}
@@ -97,9 +97,9 @@ def render_sidebar():
 
         <div class="sidebar-status">
             <span class="online-dot"></span>
-            Hospital System
+            C Backend Active
             <span>•</span>
-            Demo Mode
+            Hash Table &amp; Min-Heap
         </div>
         """, unsafe_allow_html=True)
 

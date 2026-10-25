@@ -4,6 +4,7 @@ import pandas as pd
 from pathlib import Path
 
 from hospital_data import initialize_data
+from consultation import auto_check_consultation_flow
 
 # ---------------- PAGE CONFIG ----------------
 
@@ -29,6 +30,12 @@ def load_css():
 
 load_css()
 initialize_data()
+auto_check_consultation_flow()
+
+# Active consultation alert
+active_alert = st.session_state.pop("_consultation_alert", None)
+if active_alert:
+    st.info(active_alert, icon="🔔")
 
 patients = st.session_state.patients
 doctors = st.session_state.doctors
@@ -48,10 +55,10 @@ completed = len(
     today_appointments[today_appointments["Status"] == "Completed"]
 )
 
-# Logged-in user shown in the header (demo values).
-USER_NAME = "Avery Ruiz"
+# Logged-in user shown in the header.
+USER_NAME = "Hospital Admin"
 USER_ROLE = "Administrator"
-USER_INITIALS = "".join(w[0] for w in USER_NAME.split()[:2]).upper()
+USER_INITIALS = "HA"
 
 DEPARTMENTS = [
     "Cardiology", "Neurology", "Orthopedics",
@@ -124,9 +131,9 @@ with st.sidebar:
 
     <div class="sidebar-status">
         <span class="online-dot"></span>
-        Hospital System
+        C Backend Active
         <span>•</span>
-        Demo Mode
+        Hash Table &amp; Min-Heap
     </div>
     """, unsafe_allow_html=True)
 
@@ -144,7 +151,7 @@ with header:
                 unsafe_allow_html=True)
     st.markdown(
         '<div class="subtitle">Monitor appointments, patient flow '
-        'and hospital activity in real time.</div>',
+        'and hospital activity in real time · <span class="pill green">● Live</span></div>',
         unsafe_allow_html=True
     )
 
@@ -180,13 +187,13 @@ st.markdown('<div class="section-gap"></div>', unsafe_allow_html=True)
 
 kpis = [
     ("Total Patients", len(patients), "Registered patients",
-     "👥", "blue", "vs. last week"),
+     "👥", "blue", "live total"),
     ("Today's Appointments", len(today_appointments),
-     "Appointments scheduled today", "▦", "purple", "vs. yesterday"),
+     "Appointments scheduled today", "▦", "purple", "today's visits"),
     ("Waiting Patients", waiting, "Currently in waiting queue",
-     "⌛", "orange", "vs. yesterday"),
+     "⌛", "orange", "in queue"),
     ("Active Consultations", consulting, "Patients with doctors",
-     "⚕", "green", "vs. yesterday")
+     "⚕", "green", "active now")
 ]
 
 columns = st.columns(4, gap="medium")
@@ -208,7 +215,7 @@ for column, item in zip(columns, kpis):
                 </div>
                 <div class="kpi-footer">
                     <div class="kpi-description">{description}</div>
-                    <div class="kpi-trend">↑ 0%<small>{compare}</small></div>
+                    <div class="kpi-trend"><small>{compare}</small></div>
                 </div>
             </div>
             """,
@@ -280,7 +287,7 @@ with right:
     with st.container(border=True):
         title_col, button_col = st.columns([3, 2])
         with title_col:
-            panel_heading("⌛", "Queue Overview", "Today's patient flow")
+            panel_heading("⌛", "Patients Overview", "Today's patient flow")
         with button_col:
             if st.button("View Queue  ›", key="hdr_view_queue"):
                 st.switch_page("pages/4_Waiting_Queue.py")
