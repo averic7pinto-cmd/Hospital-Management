@@ -2,3 +2,4 @@ token,patient,doctor,department,date,time,priority,status
 T-101,Averic,Dr. Mehta,Cardiology,2026-10-25,20:02,Normal,Completed
 T-102,Tanmay,Dr. Mehta,Cardiology,2026-10-25,20:05,Normal,In Consultation
 T-103,Ayush,Dr. Mehta,Cardiology,2026-10-25,20:45,Normal,Waiting
+T-104,Amaan,Dr. Fernandes,General Medicine,2026-10-26,21:00,High,Waiting
